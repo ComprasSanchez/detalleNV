@@ -69,13 +69,41 @@ app.get("/consulta/csv", async (req, res) => {
 
         if (!rows.length) return res.status(404).json({ error: "No hay datos para ese mes" });
 
-        const { Parser } = require("json2csv");
-        const parser = new Parser();
-        const csv = parser.parse(rows);
+        // Formatear números para usar coma como separador decimal
+        const rowsFormatted = rows.map(row => ({
+            ...row,
+            TotalCobertura: parseFloat(row.TotalCobertura || 0).toFixed(2).replace('.', ','),
+            TotalComprobante: parseFloat(row.TotalComprobante || 0).toFixed(2).replace('.', ',')
+        }));
 
-        res.header("Content-Type", "text/csv");
-        res.attachment(`consulta_${mes}.csv`);
-        res.send(csv);
+        // Configuración mejorada para el CSV
+        const fields = [
+            { label: 'ID Comprobante', value: 'IDComprobante' },
+            { label: 'Sucursal', value: 'Sucursal' },
+            { label: 'Fecha Emisión', value: 'Emision' },
+            { label: 'Tipo', value: 'Tipo' },
+            { label: 'Letra', value: 'Letra' },
+            { label: 'Punto Venta', value: 'PuntoVta' },
+            { label: 'Número', value: 'Numero' },
+            { label: 'Total Cobertura', value: 'TotalCobertura' },
+            { label: 'Total Comprobante', value: 'TotalComprobante' },
+            { label: 'ID Obra Social', value: 'IDObSoc' }
+        ];
+
+        const opts = {
+            fields,
+            delimiter: ';',  // Usar punto y coma para mejor compatibilidad con Excel español
+            withBOM: true    // BOM para caracteres especiales en Excel
+        };
+
+        const { Parser } = require("json2csv");
+        const parser = new Parser(opts);
+        const csv = parser.parse(rowsFormatted);
+
+        // Headers mejorados para descarga
+        res.header("Content-Type", "text/csv; charset=utf-8");
+        res.header("Content-Disposition", `attachment; filename="Facturas_OS_Nueva_Villa_${mes}.csv"`);
+        res.send('\uFEFF' + csv);  // BOM para UTF-8 en Excel
     } catch (err) {
         console.error("Error en /consulta/csv:", err);
         res.status(500).json({ error: "Error al generar CSV" });

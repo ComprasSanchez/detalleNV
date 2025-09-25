@@ -3,31 +3,101 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Consulta Facturas</title>
+    <title>Consulta Facturas Obra Social 2099</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        select {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Consulta Facturas Obra Social 2099</h1>
-
-    <label>Elegir mes:</label>
-    <input type="month" id="mes">
-    <button onclick="consultar()">Ver en pantalla</button>
-    <button onclick="descargarCSV()">Descargar CSV</button>
-
-    <h2>Resultados:</h2>
-    <pre id="resultado"></pre>
+    <div class="card">
+        <h1>Exportar OS Nueva Villa</h1>
+        <label for="mes">Seleccionar mes</label>
+        <select id="mes">
+            <option value="">-- Selecciona un mes --</option>
+            <option value="2025-01">Enero 2025</option>
+            <option value="2025-02">Febrero 2025</option>
+            <option value="2025-03">Marzo 2025</option>
+            <option value="2025-04">Abril 2025</option>
+            <option value="2025-05">Mayo 2025</option>
+            <option value="2025-06">Junio 2025</option>
+            <option value="2025-07">Julio 2025</option>
+            <option value="2025-08">Agosto 2025</option>
+            <option value="2025-09">Septiembre 2025</option>
+            <option value="2025-10">Octubre 2025</option>
+            <option value="2025-11">Noviembre 2025</option>
+            <option value="2025-12">Diciembre 2025</option>
+        </select>
+        <button onclick="descargarCSV()">Descargar CSV</button>
+    </div>
 
     <script>
-        async function consultar() {
-            const mes = document.getElementById("mes").value;
-            if (!mes) return alert("Selecciona un mes");
-            const res = await fetch(`/consulta?mes=${mes}`);
-            document.getElementById("resultado").textContent = JSON.stringify(await res.json(), null, 2);
-        }
-
         function descargarCSV() {
             const mes = document.getElementById("mes").value;
-            if (!mes) return alert("Selecciona un mes");
+            if (!mes) return alert("Por favor selecciona un mes");
             window.location.href = `/consulta/csv?mes=${mes}`;
         }
     </script>
