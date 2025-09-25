@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta Facturas</title>
+</head>
+
+<body>
+    <h1>Consulta Facturas Obra Social 2099</h1>
+
+    <label>Elegir mes:</label>
+    <input type="month" id="mes">
+    <button onclick="consultar()">Ver en pantalla</button>
+    <button onclick="descargarCSV()">Descargar CSV</button>
+
+    <h2>Resultados:</h2>
+    <pre id="resultado"></pre>
+
+    <script>
+        async function consultar() {
+            const mes = document.getElementById("mes").value;
+            if (!mes) return alert("Selecciona un mes");
+            const res = await fetch(`/consulta?mes=${mes}`);
+            document.getElementById("resultado").textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        function descargarCSV() {
+            const mes = document.getElementById("mes").value;
+            if (!mes) return alert("Selecciona un mes");
+            window.location.href = `/consulta/csv?mes=${mes}`;
+        }
+    </script>
+</body>
+
+</html>
